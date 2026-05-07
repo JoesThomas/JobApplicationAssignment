@@ -1,0 +1,6 @@
+<component name="InspectionProjjectProfileManager">
+    <profile version="1.0">
+        <option name="Joe" value="Project Default"/>
+        <inspection_tool class="GradleKotlinCoroutinesDeprecation"></inspection_tool>
+    </profile>
+</component>
