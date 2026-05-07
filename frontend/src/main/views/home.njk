@@ -1,121 +1,54 @@
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-
 {% extends "template.njk" %}
 
-<!-- You may want to make further use of these components: https://design-system.service.gov.uk/components/
-but ultimately it is up to you -->
-
 {% block content %}
-  <h1 class="govuk-heading-xl">Welcome to your dev test!</h1>
+<h1 class="govuk-heading-xl">Task Manager</h1>
 
-  <!-- The freedom is yours. You can design the solution however you like, however there is a starting point provided
-  to ensure you have both services running. You may want to make use of the Gov UK Components:
-  https://design-system.service.gov.uk/components/ to add tabs and so forth :) -->
+<form method="post" action="/tasks" class="govuk-form-group">
+  <label class="govuk-label">Title</label>
+  <input class="govuk-input" type="text" name="title" required>
 
-  {% if example.id %}
+  <label class="govuk-label">Description</label>
+  <textarea class="govuk-textarea" name="description"></textarea>
 
-    {{ govukSummaryList({
-      rows: [
-        {
-          key: {
-            text: "ID"
-          },
-          value: {
-            text: example.id
-          },
-          actions: {
-            items: [
-              {
-                href: "#",
-                text: "Change",
-                visuallyHiddenText: "change case id ?!"
-              }
-            ]
-          }
-        },
-        {
-          key: {
-            text: "Case Number"
-          },
-          value: {
-            text: example.caseNumber
-          },
-          actions: {
-            items: [
-              {
-                href: "#",
-                text: "Change",
-                visuallyHiddenText: "change case number"
-              }
-            ]
-          }
-        },
-        {
-          key: {
-            text: "Title"
-          },
-          value: {
-            html: example.title
-          },
-          actions: {
-            items: [
-              {
-                href: "#",
-                text: "Change",
-                visuallyHiddenText: "change case title"
-              }
-            ]
-          }
-        },
-        {
-          key: {
-            text: "Description"
-          },
-          value: {
-            html: example.description
-          },
-          actions: {
-            items: [
-               {
-                 href: "#",
-                 text: "Delete",
-                 visuallyHiddenText: "Delete description"
-               },
-               {
-                 href: "#",
-                 text: "Change",
-                 visuallyHiddenText: "Change description"
-               }
-            ]
-          }
-        },
-        {
-          key: {
-            text: "Status"
-          },
-          value: {
-            html: example.status
-          },
-          actions: {
-            items: [
-            ]
-          }
-        },
-        {
-          key: {
-           text: "Created Date"
-          },
-          value: {
-           html: example.createdDate
-          },
-          actions: {
-           items: [
-           ]
-          }
-        }
-      ]
-    }) }}
+  <label class="govuk-label">Status</label>
+  <select class="govuk-select" name="status">
+    <option value="TODO">TODO</option>
+    <option value="IN_PROGRESS">IN_PROGRESS</option>
+    <option value="COMPLETED">COMPLETED</option>
+  </select>
 
-  {% endif %}
+  <label class="govuk-label">Due Date</label>
+  <input class="govuk-input" type="datetime-local" name="dueDateTime">
+
+  <button class="govuk-button" type="submit">Create Task</button>
+</form>
+
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+{% for task in tasks %}
+<div class="govuk-summary-card govuk-!-margin-bottom-6">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">{{ task.title }}</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <p>{{ task.description }}</p>
+    <p><strong>Status:</strong> {{ task.status }}</p>
+    <p><strong>Due:</strong> {{ task.dueDateTime }}</p>
+
+    <form method="post" action="/tasks/{{ task.id }}/status">
+      <select class="govuk-select" name="status">
+        <option value="TODO">TODO</option>
+        <option value="IN_PROGRESS">IN_PROGRESS</option>
+        <option value="COMPLETED">COMPLETED</option>
+      </select>
+      <button class="govuk-button govuk-button--secondary" type="submit">Update</button>
+    </form>
+
+    <form method="post" action="/tasks/{{ task.id }}/delete">
+      <button class="govuk-button govuk-button--warning" type="submit">Delete</button>
+    </form>
+  </div>
+</div>
+{% endfor %}
 
 {% endblock %}
